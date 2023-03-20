@@ -61,7 +61,10 @@ void	cmd1(t_pipex *data)
 				break ;
 			i++;
 		}
-		execve(pathname, data->cmd1, data->envp);
+		if (access(pathname, X_OK) == 0)
+			execve(pathname, data->cmd1, data->envp);
+		else
+			perror(data->cmd1[0]);
 		free(pathname);
 	}
 }
@@ -75,7 +78,10 @@ void	cmd2(t_pipex *data)
 
 	outfile_fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
 	if (outfile_fd == -1)
+	{
 		perror("outfile");
+		return ;
+	}
 	pid = fork();
 	if (pid == -1)
 		perror("fork");
@@ -97,7 +103,10 @@ void	cmd2(t_pipex *data)
 				break ;
 			i++;
 		}
-		execve(pathname, data->cmd2, data->envp);
+		if (access(pathname, X_OK) == 0)
+			execve(pathname, data->cmd2, data->envp);
+		else
+			perror(data->cmd2[0]);
 		free(pathname);
 	}
 }
