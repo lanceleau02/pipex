@@ -16,6 +16,7 @@
 # include "libft.h"
 # include <unistd.h>
 # include <fcntl.h>
+# include <stdio.h>
 
 typedef struct	s_pipex
 {
@@ -29,10 +30,11 @@ typedef struct	s_pipex
 	char	**path;
 }	t_pipex;
 
-int		error(t_pipex *data, int code);
+int		handle_error(t_pipex *data);
 void	cmd1(t_pipex *data);
 void	cmd2(t_pipex *data);
 void	get_path(t_pipex *data);
 void	pipex(t_pipex *data);
+//void	print_error(char *word, int code);
 
 #endif

@@ -27,7 +27,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		write(2, "Error\n>> Too few arguments.\n", 28);
+		ft_putstr_fd("Error\n>> Too few arguments.\n", 2);
 		return (1);
 	}
 	struct_init(&data, argv, envp);

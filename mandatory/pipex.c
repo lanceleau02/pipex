@@ -14,11 +14,10 @@
 
 void	pipex(t_pipex *data)
 {
-	if (handle_error(data) == -1)
-		print_error(data->word, data->code);
+	//handle_error(data);
 	get_path(data);
 	if (pipe(data->pipefd) == -1)
-		return ;
+		perror("pipe");
 	cmd1(data);
 	cmd2(data);
 }

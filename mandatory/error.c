@@ -14,12 +14,12 @@
 
 static int	check_files(t_pipex *data)
 {
-	if (access(data->infile, F_OK) == -1 && access(data->outfile, F_OK) == -1)
-		return (1);
-	else if (access(data->infile, F_OK) == -1)
+	/*if (access(data->infile, F_OK) == -1 && access(data->outfile, F_OK) == -1)
+		return (1);*/
+	if (access(data->infile, F_OK) == -1)
 		return (2);
-	else if (access(data->outfile, F_OK) == -1)
-		return (3);
+	/*else if (access(data->outfile, F_OK) == -1)
+		return (3);*/
 	else if (access(data->infile, R_OK) == -1
 		&& access(data->outfile, W_OK) == -1)
 		return (4);
@@ -27,7 +27,33 @@ static int	check_files(t_pipex *data)
 		return (5);
 	else if (access(data->outfile, W_OK) == -1)
 		return (6);
-	else if (open(data->outfile, 1755))
+	/*else if (open(data->outfile, 1755) == -1)
+		return (7);*/
+	return (0);
+}
+
+static void	print_error(char *word, int code)
+{
+	if (code == 1)
+	{
+		ft_putstr_fd(word, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+	}
+	else if (code == 2)
+	{
+		ft_putstr_fd(word, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+	}
+	else if (code == 3)
+	{
+		ft_putstr_fd(word, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+	}
+	else if (code == 4)
+	{
+		ft_putstr_fd(word, 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
 }
 
 int	handle_error(t_pipex *data)
@@ -50,31 +76,7 @@ int	handle_error(t_pipex *data)
 		print_error(data->infile, 2);
 	else if (check_files(data) == 6)
 		print_error(data->outfile, 2);
-	else if () // Type of file
+	else if (check_files(data) == 7) // Type of file
+		print_error(data->outfile, 3);
 	return (-1);
-}
-
-int	print_error(char *word, int code)
-{
-	if (code == 1)
-	{
-		ft_putstr_fd(word, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-	}
-	else if (code == 2)
-	{
-		ft_putstr_fd(word, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-	}
-	else if (code == 3)
-	{
-		ft_putstr_fd(word, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
-	else if (code == 4)
-	{
-		ft_putstr_fd(word, 2);
-		ft_putstr_fd(": command not found\n", 2);
-	}
-	return (1);
 }

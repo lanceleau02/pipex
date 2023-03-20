@@ -36,10 +36,13 @@ void	cmd1(t_pipex *data)
 
 	infile_fd = open(data->infile, O_RDONLY);
 	if (infile_fd == -1)
-		error(data, 1);
+	{
+		perror("infile");
+		return ;
+	}
 	pid = fork();
 	if (pid == -1)
-		return ;
+		perror("fork");
 	else if (pid == 0)
 	{
 		if (dup2(infile_fd, 0) == -1 || dup2(data->pipefd[1], 1) == -1)
@@ -55,9 +58,10 @@ void	cmd1(t_pipex *data)
 		{
 			pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd1[0]);
 			if (access(pathname, X_OK) == 0)
-				execve(data->cmd1[0], data->cmd1, data->envp);
+				break ;
 			i++;
 		}
+		execve(pathname, data->cmd1, data->envp);
 		free(pathname);
 	}
 }
@@ -69,12 +73,12 @@ void	cmd2(t_pipex *data)
 	int		i;
 	char	*pathname;
 
-	outfile_fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC | 0644);
+	outfile_fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
 	if (outfile_fd == -1)
-		error(data, 1);
+		perror("outfile");
 	pid = fork();
 	if (pid == -1)
-		return ;
+		perror("fork");
 	else if (pid == 0)
 	{
 		if (dup2(data->pipefd[0], 0) == -1 || dup2(outfile_fd, 1) == -1)
@@ -90,9 +94,10 @@ void	cmd2(t_pipex *data)
 		{
 			pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd2[0]);
 			if (access(pathname, X_OK) == 0)
-				execve(data->cmd2[0], data->cmd2, data->envp);
+				break ;
 			i++;
 		}
+		execve(pathname, data->cmd2, data->envp);
 		free(pathname);
 	}
 }
