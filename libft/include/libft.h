@@ -87,6 +87,7 @@ int			ft_printf(const char *str, ...);
 
 double		ft_atod(const char *nptr);
 long		ft_atol(const char *nptr);
+void		ft_free_taboftab(char **tab);
 int			ft_isdouble(const char *nptr);
 void		ft_sort_int_tab(int *tab, int size);
 int			ft_strcmp(char *s1, char *s2);

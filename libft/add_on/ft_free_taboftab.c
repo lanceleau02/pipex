@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   ft_free_taboftab.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: laprieur <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/14 10:39:31 by laprieur          #+#    #+#             */
-/*   Updated: 2023/03/17 14:51:16 by laprieur         ###   ########.fr       */
+/*   Created: 2023/03/21 16:43:51 by laprieur          #+#    #+#             */
+/*   Updated: 2023/03/21 16:43:07 by laprieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-void	pipex(t_pipex *data)
+void	ft_free_taboftab(char **tab)
 {
-	get_path(data);
-	if (pipe(data->pipefd) == -1)
+	int	i;
+	int	j;
+
+	i = 0;
+	while (tab[i])
 	{
-		perror("pipe");
-		return ;
+		j = 0;
+		while (tab[i][j])
+		{
+			free(tab[i][j]);
+			j++;
+		}
+		i++;
 	}
-	cmd(data, 0, 0);
-	cmd(data, 1, 1);
-	close(data->pipefd[0]);
-	close(data->pipefd[1]);
 }

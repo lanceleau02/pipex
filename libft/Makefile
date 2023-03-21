@@ -62,6 +62,7 @@ BONUS				:=	bonus/ft_lstadd_back_bonus.c		\
 
 ADD_ON				:=	add_on/ft_atod.c					\
 						add_on/ft_atol.c					\
+						add_on/ft_free_taboftab.c			\
 						add_on/ft_isdouble.c				\
 						add_on/ft_sort_int_tab.c			\
 						add_on/ft_strcmp.c					\

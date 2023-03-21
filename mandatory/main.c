@@ -32,5 +32,9 @@ int	main(int argc, char **argv, char **envp)
 	}
 	struct_init(&data, argv, envp);
 	pipex(&data);
+	waitpid(-1, NULL, 0);
+	waitpid(-1, NULL, 0);
+	ft_free_taboftab(data.cmd1);
+	ft_free_taboftab(data.cmd2);
 	return (0);
 }
