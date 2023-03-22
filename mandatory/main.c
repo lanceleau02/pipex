@@ -36,5 +36,6 @@ int	main(int argc, char **argv, char **envp)
 	waitpid(-1, NULL, 0);
 	ft_free_taboftab(data.cmd1);
 	ft_free_taboftab(data.cmd2);
+	ft_free_taboftab(data.path);
 	return (0);
 }

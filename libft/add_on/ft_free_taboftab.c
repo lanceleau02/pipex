@@ -15,17 +15,12 @@
 void	ft_free_taboftab(char **tab)
 {
 	int	i;
-	int	j;
 
 	i = 0;
 	while (tab[i])
 	{
-		j = 0;
-		while (tab[i][j])
-		{
-			free(tab[i][j]);
-			j++;
-		}
+		free(tab[i]);
 		i++;
 	}
+	free(tab);
 }

@@ -28,6 +28,22 @@ void	get_path(t_pipex *data)
 	free(full_path);
 }
 
+/*static int	open_files(char *file, int code)
+{
+	int	fd;
+
+	if (code == 0)
+		fd = open(data->infile, O_RDONLY);
+	else if (code == 1)
+		fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
+	if (fd == -1)
+	{
+		perror(file);
+		return (-1);
+	}
+	return (fd);
+}*/
+
 void	cmd(t_pipex *data, int file, int cmd)
 {
 	int		fd;
