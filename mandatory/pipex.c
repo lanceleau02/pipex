@@ -20,8 +20,8 @@ void	pipex(t_pipex *data)
 		perror("pipe");
 		return ;
 	}
-	cmd(data, 0, 0);
-	cmd(data, 1, 1);
-	close(data->pipefd[0]);
+	cmd(data, 0, data->infile, data->cmd1);
 	close(data->pipefd[1]);
+	cmd(data, 1, data->outfile, data->cmd2);
+	close(data->pipefd[0]);
 }

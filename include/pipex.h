@@ -31,7 +31,7 @@ typedef struct	s_pipex
 	char	**path;
 }	t_pipex;
 
-void	cmd(t_pipex *data, int file, int cmd);
+void	cmd(t_pipex *data, int file, char *file_name, char **cmd);
 void	get_path(t_pipex *data);
 void	pipex(t_pipex *data);
 

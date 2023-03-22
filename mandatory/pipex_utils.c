@@ -28,183 +28,72 @@ void	get_path(t_pipex *data)
 	free(full_path);
 }
 
-/*static int	open_files(char *file, int code)
+static int	open_files(char *file, int code)
 {
 	int	fd;
 
+	fd = 0;
 	if (code == 0)
-		fd = open(data->infile, O_RDONLY);
+		fd = open(file, O_RDONLY);
 	else if (code == 1)
-		fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
+		fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 0664);
 	if (fd == -1)
 	{
 		perror(file);
 		return (-1);
 	}
 	return (fd);
-}*/
+}
 
-void	cmd(t_pipex *data, int file, int cmd)
+static void	make_dup2(t_pipex *data, int fd, int code)
+{
+	dup2(fd, code);
+	if (code == 0)
+		dup2(data->pipefd[1], 1);
+	else if (code == 1)
+		dup2(data->pipefd[0], 0);
+	close(data->pipefd[0]);
+	close(data->pipefd[1]);
+	close(fd);
+}
+
+static void	exec_cmd(t_pipex *data, char **cmd)
+{
+	int		i;
+	char	*cmd_path;
+
+	i = 0;
+	while (data->path[i])
+	{
+		cmd_path = ft_strjoin(ft_strjoin(data->path[i], "/"), cmd[0]);
+		if (access(cmd_path, X_OK) == 0)
+			break ;
+		i++;
+	}
+	execve(cmd_path, cmd, data->envp);
+	perror(cmd[0]);
+	free(cmd_path);
+}
+
+void	cmd(t_pipex *data, int file, char *file_name, char **cmd)
 {
 	int		fd;
 	int		pid;
-	int		i;
-	char	*pathname;
 	
-	pathname = NULL;
-	if (file == 0)
-	{
-		fd = open(data->infile, O_RDONLY);
-		if (fd == -1)
-		{
-			perror("infile");
-			return ;
-		}
-	}
-	else if (file == 1)
-	{
-		fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
-		if (fd == -1)
-		{
-			perror("outfile");
-			return ;
-		}
-	}
+	fd = open_files(file_name, file);
+	if (fd == -1)
+		return ;
 	pid = fork();
 	if (pid == -1)
+	{
 		perror("fork");
+		exit(1);
+	}
 	else if (pid == 0)
 	{
-		if (file == 0)
-		{
-			if (dup2(fd, 0) == -1 || dup2(data->pipefd[1], 1) == -1)
-			{
-				if (fd > -1)
-					close(fd);
-			}
-		}
-		else if (file == 1)
-		{
-			if (dup2(data->pipefd[0], 0) == -1 || dup2(fd, 1) == -1)
-			{
-				if (fd > -1)
-					close(fd);
-			}
-		}
-		close(fd);
-		close(data->pipefd[0]);
-		close(data->pipefd[1]);
-		if (cmd == 0)
-		{
-			i = 0;
-			while (data->path[i])
-			{
-				pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd1[0]);
-				if (access(pathname, X_OK) == 0)
-					break ;
-				i++;
-			}
-			execve(pathname, data->cmd1, data->envp);
-			perror(data->cmd1[0]);
-		}
-		else if (cmd == 1)
-		{
-			i = 0;
-			while (data->path[i])
-			{
-				pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd2[0]);
-				if (access(pathname, X_OK) == 0)
-					break ;
-				i++;
-			}
-			execve(pathname, data->cmd2, data->envp);
-			perror(data->cmd2[0]);
-		}
-		free(pathname);
+		make_dup2(data, fd, file);
+		exec_cmd(data, cmd);
 		exit(0);
 	}
 	close(fd);
 }
-
-/*void	cmd1(t_pipex *data)
-{
-	int		infile_fd;
-	int		pid;
-	int		i;
-	char	*pathname;
-
-	infile_fd = open(data->infile, O_RDONLY);
-	if (infile_fd == -1)
-	{
-		perror("infile");
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	else if (pid == 0)
-	{
-		if (dup2(infile_fd, 0) == -1 || dup2(data->pipefd[1], 1) == -1)
-		{
-			if (infile_fd > -1)
-				close(infile_fd);
-			close(*data->pipefd);
-		}
-		close(infile_fd);
-		close(*data->pipefd);
-		i = 0;
-		while (data->path[i])
-		{
-			pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd1[0]);
-			if (access(pathname, X_OK) == 0)
-				break ;
-			i++;
-		}
-		execve(pathname, data->cmd1, data->envp);
-		perror(data->cmd1[0]);
-		free(pathname);
-		exit(0);
-	}
-}
-
-void	cmd2(t_pipex *data)
-{
-	int		outfile_fd;
-	int		pid;
-	int		i;
-	char	*pathname;
-
-	outfile_fd = open(data->outfile, O_CREAT | O_RDWR | O_TRUNC, 0664);
-	if (outfile_fd == -1)
-	{
-		perror("outfile");
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	else if (pid == 0)
-	{
-		if (dup2(data->pipefd[0], 0) == -1 || dup2(outfile_fd, 1) == -1)
-		{
-			if (outfile_fd > -1)
-				close(outfile_fd);
-			close(*data->pipefd);
-		}
-		close(outfile_fd);
-		close(*data->pipefd);
-		i = 0;
-		pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd2[0]);
-//		while (data->path[i])
-//		{
-//			pathname = ft_strjoin(ft_strjoin(data->path[i], "/"), data->cmd2[0]);
-//			if (access(pathname, X_OK) == 0)
-//				break ;
-//			i++;
-//		}
-		execve(pathname, data->cmd2, data->envp);
-		perror(data->cmd2[0]);
-		free(pathname);
-		exit(0);
-	}
-}*/
