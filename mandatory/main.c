@@ -14,6 +14,8 @@
 
 static void	struct_init(t_pipex *data, char **argv, char **envp)
 {
+	data->argv2 = argv[2];
+	data->argv3 = argv[3];
 	data->envp = envp;
 	data->cmd1 = ft_split(argv[2], ' ');
 	data->cmd2 = ft_split(argv[3], ' ');
@@ -27,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		ft_putstr_fd("Error\n>> Too few arguments.\n", 2);
+		ft_putstr_fd("Error\n", 2);
 		return (1);
 	}
 	struct_init(&data, argv, envp);

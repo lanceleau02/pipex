@@ -20,6 +20,7 @@ BONUS_NAME		:=	pipex_bonus
 LIBFT			:=	libft/libft.a
 
 MANDATORY		:=	mandatory/main.c		\
+					mandatory/parsing.c		\
 					mandatory/pipex.c		\
 					mandatory/pipex_utils.c	\
 

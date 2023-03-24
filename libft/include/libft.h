@@ -91,6 +91,7 @@ void		ft_free_taboftab(char **tab);
 int			ft_isdouble(const char *nptr);
 void		ft_sort_int_tab(int *tab, int size);
 int			ft_strcmp(char *s1, char *s2);
+int			ft_str_is_blank(const char *str);
 char		*ft_strjoin(const char *s1, const char *s2);
 
 #endif

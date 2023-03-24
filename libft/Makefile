@@ -66,6 +66,7 @@ ADD_ON				:=	add_on/ft_atod.c					\
 						add_on/ft_isdouble.c				\
 						add_on/ft_sort_int_tab.c			\
 						add_on/ft_strcmp.c					\
+						add_on/ft_str_is_blank.c			\
 						add_on/ft_strjoin.c					\
 
 FT_PRINTF			:=	ft_printf/ft_printf.c				\

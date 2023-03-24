@@ -19,10 +19,12 @@
 # include <stdio.h>
 # include <wait.h>
 
-typedef struct	s_pipex
+typedef struct s_pipex
 {
 	int		pid;
 	int		pipefd[2];
+	char	*argv2;
+	char	*argv3;
 	char	**envp;
 	char	**cmd1;
 	char	**cmd2;
@@ -33,6 +35,7 @@ typedef struct	s_pipex
 
 void	cmd(t_pipex *data, int file, char *file_name, char **cmd);
 void	get_path(t_pipex *data);
+int		parsing(char **cmd);
 void	pipex(t_pipex *data);
 
 #endif
