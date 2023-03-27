@@ -16,6 +16,8 @@ void	ft_free_taboftab(char **tab)
 {
 	int	i;
 
+	if (tab == NULL)
+		return ;
 	i = 0;
 	while (tab[i])
 	{

@@ -17,6 +17,7 @@ void	get_path(t_pipex *data)
 	int		i;
 	char	*full_path;
 
+	full_path = NULL;
 	i = 0;
 	while (data->envp[i])
 	{
@@ -24,9 +25,12 @@ void	get_path(t_pipex *data)
 			full_path = ft_strdup(&data->envp[i][5]);
 		i++;
 	}
-	data->path = ft_split(full_path, ':');
-	free(full_path);
-	full_path = NULL;
+	if (full_path != NULL)
+	{
+		data->path = ft_split(full_path, ':');
+		free(full_path);
+		full_path = NULL;
+	}
 }
 
 static int	open_files(char *file, int code)
@@ -40,7 +44,7 @@ static int	open_files(char *file, int code)
 		if (code == 1)
 		{
 			ft_putstr_fd(file, 2);
-			ft_putstr_fd(": Is a directory", 2);
+			ft_putstr_fd(": Is a directory\n", 2);
 			return (-1);
 		}
 	}
@@ -76,11 +80,11 @@ static void	exec_cmd(t_pipex *data, char **cmd)
 	char	*cmd_path;
 
 	i = 0;
-	if (check_absolute_path(cmd) == 1)
+	if (check_absolute_path(cmd[0]) == 1)
 		cmd_path = ft_strdup(cmd[0]);
 	else
 	{
-		while (data->path[i])
+		while (data && data->path && data->path[i])
 		{
 			tmp = ft_strjoin(data->path[i], "/");
 			cmd_path = ft_strjoin(tmp, cmd[0]);
@@ -95,7 +99,7 @@ static void	exec_cmd(t_pipex *data, char **cmd)
 	if (ft_str_is_blank(cmd_path) == 1 && access(cmd_path, X_OK) == 0)
 		execve(cmd_path, cmd, data->envp);
 	ft_putstr_fd(cmd[0], 2);
-	ft_putstr_fd(":command not found\n", 2);
+	ft_putstr_fd(": command not found\n", 2);
 	close(0);
 	close(1);
 	ft_free_taboftab(data->path);

@@ -14,6 +14,9 @@
 
 static void	struct_init(t_pipex *data, char **argv, char **envp)
 {
+	data->pid = 0;
+	data->pipefd[0] = 0;
+	data->pipefd[1] = 0;
 	data->argv2 = argv[2];
 	data->argv3 = argv[3];
 	data->envp = envp;
@@ -21,6 +24,7 @@ static void	struct_init(t_pipex *data, char **argv, char **envp)
 	data->cmd2 = ft_split(argv[3], ' ');
 	data->infile = argv[1];
 	data->outfile = argv[4];
+	data->path = NULL;
 }
 
 int	main(int argc, char **argv, char **envp)
