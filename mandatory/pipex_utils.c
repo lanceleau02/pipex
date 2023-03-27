@@ -12,28 +12,15 @@
 
 #include "pipex.h"
 
-void	get_path(t_pipex *data)
+int	check_absolute_path(char *cmd)
 {
-	int		i;
-	char	*full_path;
-
-	full_path = NULL;
-	i = 0;
-	while (data->envp[i])
-	{
-		if (ft_strncmp(data->envp[i], "PATH=", 5) == 0)
-			full_path = ft_strdup(&data->envp[i][5]);
-		i++;
-	}
-	if (full_path != NULL)
-	{
-		data->path = ft_split(full_path, ':');
-		free(full_path);
-		full_path = NULL;
-	}
+	if (cmd != NULL && cmd[0] != '\0' && cmd[0] == '/'
+		&& access(cmd, X_OK) == 0)
+		return (1);
+	return (0);
 }
 
-static int	open_files(char *file, int code)
+int	open_files(char *file, int code)
 {
 	int	fd;
 
@@ -61,7 +48,7 @@ static int	open_files(char *file, int code)
 	return (fd);
 }
 
-static void	make_dup2(t_pipex *data, int fd, int code)
+void	make_dup2(t_pipex *data, int fd, int code)
 {
 	dup2(fd, code);
 	if (code == 0)
@@ -73,7 +60,18 @@ static void	make_dup2(t_pipex *data, int fd, int code)
 	close(fd);
 }
 
-static void	exec_cmd(t_pipex *data, char **cmd)
+static void	error_close_and_free(t_pipex *data, char **cmd)
+{
+	ft_putstr_fd(cmd[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	close(0);
+	close(1);
+	ft_free_taboftab(data->path);
+	ft_free_taboftab(data->cmd1);
+	ft_free_taboftab(data->cmd2);
+}
+
+void	exec_cmd(t_pipex *data, char **cmd)
 {
 	int		i;
 	char	*tmp;
@@ -98,34 +96,5 @@ static void	exec_cmd(t_pipex *data, char **cmd)
 	}
 	if (ft_str_is_blank(cmd_path) == 1 && access(cmd_path, X_OK) == 0)
 		execve(cmd_path, cmd, data->envp);
-	ft_putstr_fd(cmd[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	close(0);
-	close(1);
-	ft_free_taboftab(data->path);
-	ft_free_taboftab(data->cmd1);
-	ft_free_taboftab(data->cmd2);
-}
-
-void	cmd(t_pipex *data, int file, char *file_name, char **cmd)
-{
-	int		fd;
-	int		pid;
-
-	fd = open_files(file_name, file);
-	if (fd == -1 || parsing(cmd) == 1)
-		return ;
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(1);
-	}
-	else if (pid == 0)
-	{
-		make_dup2(data, fd, file);
-		exec_cmd(data, cmd);
-		exit(0);
-	}
-	close(fd);
+	error_close_and_free(data, cmd);
 }

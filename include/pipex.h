@@ -25,18 +25,19 @@ typedef struct s_pipex
 	int		pipefd[2];
 	char	*argv2;
 	char	*argv3;
-	char	**envp;
-	char	**cmd1;
-	char	**cmd2;
 	char	*infile;
 	char	*outfile;
+	char	**cmd1;
+	char	**cmd2;
+	char	**envp;
 	char	**path;
 }	t_pipex;
 
 int		check_absolute_path(char *cmd);
+int		open_files(char *file, int code);
 int		parsing(char **cmd);
-void	cmd(t_pipex *data, int file, char *file_name, char **cmd);
-void	get_path(t_pipex *data);
+void	exec_cmd(t_pipex *data, char **cmd);
+void	make_dup2(t_pipex *data, int fd, int code);
 void	pipex(t_pipex *data);
 
 #endif

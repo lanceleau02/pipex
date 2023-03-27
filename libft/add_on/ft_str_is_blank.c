@@ -20,7 +20,7 @@ int	ft_str_is_blank(const char *str)
 	while (str && (str[i] == ' ' || str[i] == '\t'))
 	{
 		if (str[i] == '\0')
-			break;
+			break ;
 		i++;
 	}
 	if (i == ft_strlen(str))
