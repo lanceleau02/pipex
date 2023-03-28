@@ -33,11 +33,4 @@ typedef struct s_pipex
 	char	**path;
 }	t_pipex;
 
-int		check_absolute_path(char *cmd);
-int		open_files(char *file, int code);
-int		parsing(char **cmd);
-void	exec_cmd(t_pipex *data, char **cmd);
-void	make_dup2(t_pipex *data, int fd, int code);
-void	pipex(t_pipex *data);
-
 #endif

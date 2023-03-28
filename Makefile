@@ -24,7 +24,7 @@ MANDATORY		:=	mandatory/main.c		\
 					mandatory/pipex.c		\
 					mandatory/pipex_utils.c	\
 
-BONUS			:=	\
+BONUS			:=	bonus/main.c			\
 
 MANDATORY_OBJS	:=	$(MANDATORY:%.c=.build/%.o)
 BONUS_OBJS		:=	$(BONUS:%.c=.build/%.o)
