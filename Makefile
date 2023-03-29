@@ -31,7 +31,7 @@ BONUS_OBJS		:=	$(BONUS:%.c=.build/%.o)
 DEPS			:=	$(MANDATORY_OBJS:%.o=%.d) $(BONUS_OBJS:%.o=%.d)
 
 CC				:=	clang
-CFLAGS			:=	-Wall -Wextra -Werror -g -Ofast
+CFLAGS			:=	-Wall -Wextra -Werror -Ofast
 CPPFLAGS		:=	-MP -MMD -Iinclude -Ilibft/include
 LDFLAGS			:=	-Llibft -lft
 
