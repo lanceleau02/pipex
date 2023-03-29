@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pipex.h>
+#include "pipex.h"
 
 static void	struct_init(t_pipex *data, char **argv, char **envp)
 {
